@@ -15,12 +15,12 @@ class YliAli: ObservableObject {
     let high: Int
     
     @Published private(set) var guesses:
-Array<Int> = []
-    init(low: Int, high: Int) {
-    self.low = low
-    self.high = high
-    self.secret =
-(low...high).randomElement() ?? low
+    Array<Int> = []
+        init(low: Int, high: Int) {
+        self.low = low
+        self.high = high
+        self.secret =
+    (low...high).randomElement() ?? low
 }
     
 func arvaa(arvaus: Int) ->
