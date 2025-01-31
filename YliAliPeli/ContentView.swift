@@ -14,9 +14,16 @@ struct ContentView: View {
                 .foregroundColor(.pink)
                 .padding()
             
+            // Yritysten määrä
+            if game.tries() > 0 {
+                Text("Yritksiä: \(game.tries())")
+                    .padding()
+                    .foregroundColor(.blue)
+            }
+            
             // Tulos viesti
             Text(tulos)
-                .foregroundColor(.blue)
+                .foregroundColor(.purple)
                 .padding()
             
             // Tekstikenttä arvaukselle
