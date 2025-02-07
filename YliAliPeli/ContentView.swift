@@ -3,14 +3,13 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var game = YliAli(low: 1, high: 100)
-    @State private var arvaukset: [Int] = []
     @State private var arvaus: String = ""
     @State private var tulos: String = ""
     
     var body: some View {
         VStack {
             // Arvaukset
-            Text("Arvaukset: \(arvaukset.map { String($0) }.joined(separator: ", "))")
+            Text("Arvaukset: \(game.guesses.map { String($0) }.joined(separator: ", "))")
                 .foregroundColor(.pink)
                 .padding()
             
@@ -25,7 +24,7 @@ struct ContentView: View {
             Text(tulos)
                 .foregroundColor(.purple)
                 .padding()
-            
+                          
             // Tekstikenttä arvaukselle
             TextField("Arvaa luku", text: $arvaus)
                 .keyboardType(.numberPad)
@@ -36,8 +35,8 @@ struct ContentView: View {
             Button("Arvaa") {
                 if let guess = Int(arvaus) {
                     let result = game.arvaa(arvaus: guess)
-                    arvaukset.append(guess)
                     
+                    // Update the tulos state based on the result
                     switch result {
                         case .Ali:
                             tulos = "Liian matala"
@@ -46,15 +45,15 @@ struct ContentView: View {
                         case .Osuma:
                             tulos = "Oikein!"
                     }
-                    arvaus = "" // Resetoidaan tesktikenttä
+                    arvaus = ""
                 } else {
                     tulos = "Anna kelvollinen numero"
                 }
             }
             .foregroundColor(.black)
-            
+        
         }
-        .padding()
+    .padding()
     }
 }
 
