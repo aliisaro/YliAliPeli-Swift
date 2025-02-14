@@ -3,60 +3,78 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var game = YliAli(low: 1, high: 100)
-    @State private var arvaus: String = ""
+    @State private var arvaus: Int = 1
     @State private var tulos: String = ""
+    @State private var numero: Double = 0
     
     var body: some View {
-        VStack {
-            // Arvaukset
-            Text("Arvaukset: \(game.guesses.map { String($0) }.joined(separator: ", "))")
-                .foregroundColor(.pink)
-                .padding()
+        ZStack {
+            // Tausta
+            LinearGradient(
+                gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]), startPoint: .top, endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
             
-            // Yritysten määrä
-            if game.tries() > 0 {
-                Text("Yritksiä: \(game.tries())")
-                    .padding()
-                    .foregroundColor(.blue)
-            }
-            
-            // Tulos viesti
-            Text(tulos)
-                .foregroundColor(.purple)
-                .padding()
-                          
-            // Tekstikenttä arvaukselle
-            TextField("Arvaa luku", text: $arvaus)
-                .keyboardType(.numberPad)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            // Arvaa nappi
-            Button("Arvaa") {
-                if let guess = Int(arvaus) {
-                    let result = game.arvaa(arvaus: guess)
+            // Main content
+            HStack {
+                VStack {
+                    // Otsikko
+                    Text("Yli ali peli")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundColor(.pink.opacity(0.5))
+                        .padding()
                     
-                    // Update the tulos state based on the result
-                    switch result {
+                    // Arvaukset
+                    Text("Arvaukset: \(game.guesses.map { String($0) }.joined(separator: ", "))")
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                        .padding(.bottom)
+                    
+                    HStack {
+                        // Yritysten määrä
+                        if game.tries() > 0 {
+                            Text("Yrityksiä: \(game.tries())")
+                                .padding()
+                        }
+                        // Tulos viesti
+                        Text(tulos)
+                            .padding()
+                    }
+
+                    // Liukusäädin numeroille
+                    Slider(value: Binding(
+                        get: { Double(arvaus) },
+                        set: { arvaus = Int($0) }
+                    ), in: 1...100, step: 1)
+                    
+                    Text("Valittu luku: \(arvaus)")
+                        .padding()
+                    
+                    // Arvaa nappi
+                    Button("Arvaa") {
+                        let result = game.arvaa(arvaus: arvaus)
+                        
+                        switch result {
                         case .Ali:
                             tulos = "Liian matala"
                         case .Yli:
                             tulos = "Liian korkea"
                         case .Osuma:
                             tulos = "Oikein!"
+                        }
+                        
                     }
-                    arvaus = ""
-                } else {
-                    tulos = "Anna kelvollinen numero"
+                    .buttonStyle(.borderedProminent)
+                
                 }
+                .padding()
             }
-            .foregroundColor(.black)
-        
         }
-    .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
+
